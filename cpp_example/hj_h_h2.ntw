@@ -4,9 +4,9 @@
 @photo_start
 # Photoionization
 
-1,H,H+,E,xsec_H(energy_eV)
+1,H,H+,E,auto
 # Photodissociation
-2,H2,H,H,H2_sigma_LW(energy_eV)
+2,H2,H,H,H2_sigmaLW(energy_eV)
 @photo_stop
 
 @format: idx,R,R,P,rate
