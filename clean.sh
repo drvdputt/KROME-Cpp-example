@@ -1,0 +1,1 @@
+rm -r krome/build*/*
