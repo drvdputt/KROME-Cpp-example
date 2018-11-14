@@ -14,3 +14,4 @@ cp c_example/krome_custom_Makefile $KROME_OUTPUT_DIR
 make -f krome_custom_Makefile -C $KROME_OUTPUT_DIR gfortran cinterface
 
 gcc -o run c_example/main.c $KROME_OUTPUT_DIR/*.o -I$KROME_OUTPUT_DIR -lm -lgfortran
+
