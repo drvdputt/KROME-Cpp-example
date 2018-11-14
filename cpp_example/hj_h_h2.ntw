@@ -1,0 +1,19 @@
+@common: user_grainH2_rate
+@format: idx,R,P,P,rate
+
+@photo_start
+# Photoionization
+
+1,H,H+,E,xsec_H(energy_eV)
+# Photodissociation
+2,H2,H,H,H2_sigma_LW(energy_eV)
+@photo_stop
+
+@format: idx,R,R,P,rate
+
+# Formation on dust grains. We divide by nH to make sure that the total rate scales linearly:
+# reaction speed == nH*nH*rate == nH * user_grainH2_rate
+3,H,H,H2,user_grainH2_rate/n(idx_H)
+
+# Radiative recombination
+4,H+,E,H,auto

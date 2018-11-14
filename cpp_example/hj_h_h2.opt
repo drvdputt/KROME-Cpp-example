@@ -1,0 +1,4 @@
+-photoBins=20
+-heating=PHOTO
+-cooling=ATOMIC,H2
+-interfaceC
