@@ -6,6 +6,7 @@
 
 int main()
 {
+	krome_init();
 	int i;
 	double Tgas, dt, t;
 	double* x = (double*)calloc(krome_nmols, sizeof(double));
