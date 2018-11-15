@@ -1,5 +1,5 @@
 #include "krome.hpp"
-#include "krome_user.cpp"
+#include "krome_user.hpp"
 
 #include <iostream>
 #include <fstream>
