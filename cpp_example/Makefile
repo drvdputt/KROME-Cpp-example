@@ -37,10 +37,3 @@ $(MAINOBJ): main.cpp $(HEADERS)
 
 $(PROGRAM): $(MAINOBJ) kromeobjs
 	$(CXX) $(CXXFLAGS) -o $@ $< $(KROME_OUTPUT)/*.o $(CLIB)
-
-
-
-
-
-
-
