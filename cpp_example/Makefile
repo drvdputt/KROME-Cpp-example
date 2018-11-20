@@ -26,7 +26,7 @@ REACTIONSFILE = reactions_verbatim.dat
 
 # Just a note that the default target is the first target. Naming it all is just
 # a convention.
-all: $(PROGRAM) $(REACTIONS)
+all: $(PROGRAM) $(REACTIONSFILE)
 
 $(KROMEBUILDDIR):
 	cd ../krome && python2 krome $(KROMEFLAGS)
