@@ -1,45 +1,55 @@
-CXX=g++
+# The libraries to link the fortran
+OS := $(shell uname)
+ifeq ($(OS), Darwin)
+	CLIB += -L/usr/local/Cellar/gcc/8.2.0/lib/gcc/8
+endif
+CLIB += -lm -lgfortran
 
-HERE=$(shell pwd)
-PROJ=honly
-KROME_OUTPUT=../krome/build_$(PROJ)
+HERE := $(shell pwd)
 
-INC=-I$(KROME_OUTPUT)
-CXXFLAGS=-O3 $(INC)
-CLIB=-lm -lgfortran
+# Run KROME
+KROMEPROJ = honly
+KROMEFLAGS = -unsafe -o $(HERE)/hj_h_h2.opt -n $(HERE)/hj_h_h2.ntw -project $(KROMEPROJ)
 
-MAINOBJ=main.o
-HEADERS=krome.hpp krome_user.hpp
-PROGRAM=test
+# Build KROME
+KROMEBUILDDIR = ../krome/build_$(KROMEPROJ)
+KROMEMAKEFLAGS = -f $(HERE)/../krome_custom_Makefile -C $(KROMEBUILDDIR) cinterface gfortran
+
+# Build c++ program
+CXXINC = -I$(KROMEBUILDDIR)
+CXXFLAGS = -O3 $(INC)
+
+MAINOBJ = main.o
+HEADERS = krome.hpp krome_user.hpp
+PROGRAM = test
+REACTIONSFILE = reactions_verbatim.dat
 
 # Just a note that the default target is the first target. Naming it all is just
 # a convention.
-all: $(PROGRAM) reactions_verbatim.dat
+all: $(PROGRAM) $(REACTIONS)
 
-# Run krome, if necessary
-$(KROME_OUTPUT):
-	cd ../krome && python2 krome -o $(HERE)/hj_h_h2.opt -n $(HERE)/hj_h_h2.ntw -project $(PROJ)
+$(KROMEBUILDDIR):
+	cd ../krome && python2 krome $(KROMEFLAGS)
 
-# Build krome by running make
 .PHONY: kromebuild
-kromebuild: $(KROME_OUTPUT)
-	make -f $(HERE)/../krome_custom_Makefile -C $(KROME_OUTPUT) cinterface gfortran
+kromebuild: $(KROMEBUILDDIR)
+	make $(KROMEMAKEFLAGS)
 
-# Make headers C++ compatible and put them here
-%.hpp: $(KROME_OUTPUT)/%.h
+# Make C headers C++ compatible by using 'extern "C"'
+%.hpp: $(KROMEBUILDDIR)/%.h
 	sed 's/extern/extern "C"/g' $< > $@
 
 # Indicate that the C headers are present when krome has been run
-$(patsubst %.hpp, $(KROME_OUTPUT)/%.h, $(HEADERS)): $(KROME_OUTPUT)
+$(patsubst %.hpp, $(KROMEBUILDDIR)/%.h, $(HEADERS)): $(KROMEBUILDDIR)
 
-reactions_verbatim.dat: $(KROME_OUTPUT)
-	cp $(KROME_OUTPUT)/reactions_verbatim.dat .
+$(REACTIONSFILE): $(KROMEBUILDDIR)
+	cp $(KROMEBUILDDIR)/reactions_verbatim.dat $(HERE)
 
 $(MAINOBJ): main.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(PROGRAM): $(MAINOBJ) kromebuild
-	$(CXX) $(CXXFLAGS) -o $@ $< $(KROME_OUTPUT)/*.o $(CLIB)
+	$(CXX) $(CXXFLAGS) -o $@ $< $(KROMEBUILDDIR)/*.o $(CLIB)
 
 clean:
-	rm -r $(KROME_OUTPUT) $(PROGRAM) reactions_verbatim.dat $(HEADERS)
+	rm -r $(KROMEBUILDDIR) $(PROGRAM) $(REACTIONSFILE) $(HEADERS)
