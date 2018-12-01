@@ -12,15 +12,40 @@ int main()
 	// Set the radiation field bins to logspacing, and the field itself to a blackbody
 	double low_eV = 1;
 	double high_eV = 24;
-	double Tc = 30000;
+	double Tc = 4000;
 	krome_set_photobin_bblog(low_eV, high_eV, Tc);
+	// Myflux should be the radiation background at 12.87 eV
+	double flux12_87 = krome_get_photointensity(12.87);
+	krome_set_user_myfluxuv(flux12_87);
+	std::cout << "myfluxuv = " << flux12_87 << std::endl;
+
+	// Write out the radiation field in eV / cm2 / sr / eV
+	std::vector<double> ev(krome_nPhotoBins);
+	std::vector<double> jv(krome_nPhotoBins);
+	krome_get_photobine_mid(ev.data());
+	krome_get_photobinj(jv.data());
+
+	std::ofstream radf("photobinj.dat");
+	radf << "# Emid (eV)\tJ (eV / cm2 / sr)\n";
+	for (int i = 0; i < krome_nPhotoBins; i++)
+		radf << ev[i] << '\t' << jv[i] << '\n';
+	radf.close();
+
+	// Set a fixed H2 formation rate (per H)
+	double kGrainH2 = 1e-12;
+	krome_set_user_grainh2_rate(kGrainH2);
 
 	int ie = krome_idx_E;
 	int ih = krome_idx_H;
 	int ih2 = krome_idx_H2;
 	int ip = krome_idx_Hj;
 	int numSpecies = krome_nmols;
-	std::cout << "krome hydrogen at index " << krome_idx_H << "out of " << numSpecies << std::endl;
+	for (int i = 0; i < krome_nmols; i++)
+	{
+		std::cout << i << " " << krome_names[i] << " | ";
+	}
+	std::cout << std::endl;
+	std::cout << "krome hydrogen at index " << krome_idx_H << " out of " << numSpecies << std::endl;
 
 	// Initial densities in cm-3. The indices are accessible from krome_user.h
 	std::vector<double> x(4, 0);
