@@ -23,16 +23,17 @@ MAINOBJ = main.o
 HEADERS = krome.hpp krome_user.hpp
 PROGRAM = test
 REACTIONSFILE = reactions_verbatim.dat
+CONFIGFILES = $(HERE)/hj_h_h2.opt $(HERE)/hj_h_h2.ntw
 
 # Just a note that the default target is the first target. Naming it all is just
 # a convention.
 all: $(PROGRAM) $(REACTIONSFILE)
 
-$(KROMEBUILDDIR):
+$(KROMEBUILDDIR): $(CONFIGFILES)
 	cd ../krome && python2 krome $(KROMEFLAGS)
 
 .PHONY: kromebuild
-kromebuild: $(KROMEBUILDDIR)
+kromebuild: $(KROMEBUILDDIR) 
 	make $(KROMEMAKEFLAGS)
 
 # Make C headers C++ compatible by using 'extern "C"'
