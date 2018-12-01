@@ -28,14 +28,26 @@ int main()
 	int verbosity = 0;
 
 	// Output file
-	std::ofstream outfile("equilibrium_densities");
+	std::string outfname = "equilibrium_densities";
+	std::ofstream outfile(outfname);
+	outfile << "# T densities heat cool rates\n";
 	for (double T = 10; T < 100000; T *= 1.1)
 	{
 		krome_equilibrium(x.data(), T, &verbosity);
+		double heat = krome_get_heating(x.data(), T);
+		double cool = krome_get_cooling(x.data(), T);
+		std::vector<double> coefs(krome_nrea);
+		krome_get_coef(T, x.data(), coefs.data());
+		// krome_get_photobin_rates(photoRates.data());
+
 		outfile << T;
 		for (int i = 0; i < numSpecies; i++)
 			outfile << " " << x[i];
+		outfile << " " << heat << " " << cool;
+		for (double c : coefs)
+			outfile << " " << c;
 		outfile << '\n';
 	}
 	outfile.close();
+	std::cout << "wrote to " << outfname << std::endl;
 }
