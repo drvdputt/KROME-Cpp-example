@@ -1,4 +1,4 @@
-@common: user_grainH2_rate
+@common: user_grainH2_rate,user_myfluxUV
 @format: idx,R,P,P,rate
 
 @photo_start
@@ -17,3 +17,16 @@
 
 # Radiative recombination
 4,H+,E,H,auto
+
+# Collisional dissociation
+#@format: idx,R,R,P,P,P,Tmin,Tmax,rate
+#5,H2,H,H,H,H,NONE,NONE,dissH2_Martin96(n,Tgas)
+
+# Solomon dissociation
+@next_solomon
+@format:idx,R,P,P,rate
+6,H2,H,H,H2_solomonLW(user_myfluxUV)
+
+# Collisional ionization by electrons
+@format:idx,R,R,P,P,P,rate
+7,H,E,H+,E,E,auto
