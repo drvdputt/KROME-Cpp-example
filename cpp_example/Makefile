@@ -17,7 +17,7 @@ KROMEMAKEFLAGS = -f $(HERE)/../krome_custom_Makefile -C $(KROMEBUILDDIR) cinterf
 
 # Build c++ program
 CXXINC = -I$(KROMEBUILDDIR)
-CXXFLAGS = -O3 $(INC)
+CXXFLAGS = -std=c++11 -O3 $(INC)
 
 MAINOBJ = main.o
 HEADERS = krome.hpp krome_user.hpp
