@@ -12,7 +12,7 @@ int main()
 	// Set the radiation field bins to logspacing, and the field itself to a blackbody
 	double low_eV = 1;
 	double high_eV = 24;
-	double Tc = 4000;
+	double Tc = 2950;
 	krome_set_photobin_bblog(low_eV, high_eV, Tc);
 	// Myflux should be the radiation background at 12.87 eV
 	double flux12_87 = krome_get_photointensity(12.87);
@@ -32,7 +32,7 @@ int main()
 	radf.close();
 
 	// Set a fixed H2 formation rate (per H)
-	double kGrainH2 = 1e-12;
+	double kGrainH2 = 2e-15;
 	krome_set_user_grainh2_rate(kGrainH2);
 
 	int ie = krome_idx_E;
