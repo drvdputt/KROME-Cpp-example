@@ -2,4 +2,6 @@
 
 Not sure if this still works, as it was written as a quick test a couple of years ago. 
 
-But I made this example public in case anyone is trying to figure this out.
+I made this example public in case anyone is trying to figure this out.
+
+There is a submodule included, which points to the version of KROME for which this worked.
